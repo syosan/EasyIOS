@@ -255,7 +255,11 @@ DEF_SINGLETON(Action)
 }
 
 - (void)success:(Request *)msg{
-    msg.message = [msg.output objectAtPath:[Action sharedInstance].MSG_KEY]?:@"";
+    if ([msg.output isKindOfClass:[NSDictionary class]]) {
+        msg.message = [msg.output objectAtPath:[Action sharedInstance].MSG_KEY]?:@"";
+    } else {
+        msg.message = @"";
+    }
     msg.state = RequestStateSuccess;
     if([self.aDelegaete respondsToSelector:@selector(handleActionMsg:)]){
         [self.aDelegaete handleActionMsg:msg];
